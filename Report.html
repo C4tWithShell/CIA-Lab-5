@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>
+        CIA Lab 5 - Mail Transfer Agents (MTA) - HackMD
+    </title>
+    <link rel="icon" type="image/png" href="https://hackmd.io/favicon.png">
+    <link rel="apple-touch-icon" href="https://hackmd.io/apple-touch-icon.png">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css" integrity="sha256-3iu9jgsy9TpTwXKb7bNQzqWekRX7pPK+2OLj3R922fo=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/octicons/3.5.0/octicons.min.css" integrity="sha256-QiWfLIsCT02Sdwkogf6YMiQlj4NE84MKkzEMkZnMGdg=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css" integrity="sha256-vtR0hSWRc3Tb26iuN2oZHt3KRUomwTufNIf5/4oeCyg=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@hackmd/emojify.js@2.1.0/dist/css/basic/emojify.min.css" integrity="sha256-UOrvMOsSDSrW6szVLe8ZDZezBxh5IoIfgTwdNDgTjiU=" crossorigin="anonymous" />
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i|Source+Code+Pro:300,400,500|Source+Sans+Pro:300,300i,400,400i,600,600i|Source+Serif+Pro&subset=latin-ext);.hljs{display:block;background:#fff;padding:.5em;color:#333;overflow-x:auto}.hljs-comment,.hljs-meta{color:#969896}.hljs-emphasis,.hljs-quote,.hljs-string,.hljs-strong,.hljs-template-variable,.hljs-variable{color:#df5000}.hljs-keyword,.hljs-selector-tag,.hljs-type{color:#a71d5d}.hljs-attribute,.hljs-bullet,.hljs-literal,.hljs-number,.hljs-symbol{color:#0086b3}.hljs-built_in,.hljs-builtin-name{color:#005cc5}.hljs-name,.hljs-section{color:#63a35c}.hljs-tag{color:#333}.hljs-attr,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-selector-pseudo,.hljs-title{color:#795da3}.hljs-addition{color:#55a532;background-color:#eaffea}.hljs-deletion{color:#bd2c00;background-color:#ffecec}.hljs-link{text-decoration:underline}.markdown-body{font-size:16px;line-height:1.5;word-wrap:break-word}.markdown-body:after,.markdown-body:before{display:table;content:""}.markdown-body:after{clear:both}.markdown-body>:first-child{margin-top:0!important}.markdown-body>:last-child{margin-bottom:0!important}.markdown-body a:not([href]){color:inherit;text-decoration:none}.markdown-body .absent{color:#c00}.markdown-body .anchor{float:left;padding-right:4px;margin-left:-20px;line-height:1}.markdown-body .anchor:focus{outline:none}.markdown-body blockquote,.markdown-body dl,.markdown-body ol,.markdown-body p,.markdown-body pre,.markdown-body table,.markdown-body ul{margin-top:0;margin-bottom:16px}.markdown-body hr{height:.25em;padding:0;margin:24px 0;background-color:#e7e7e7;border:0}.markdown-body blockquote{font-size:16px;padding:0 1em;color:#777;border-left:.25em solid #ddd}.markdown-body blockquote>:first-child{margin-top:0}.markdown-body blockquote>:last-child{margin-bottom:0}.markdown-body kbd,.popover kbd{display:inline-block;padding:3px 5px;font-size:11px;line-height:10px;color:#555;vertical-align:middle;background-color:#fcfcfc;border:1px solid #ccc;border-bottom-color:#bbb;border-radius:3px;box-shadow:inset 0 -1px 0 #bbb}.markdown-body .loweralpha{list-style-type:lower-alpha}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{margin-top:24px;margin-bottom:16px;font-weight:600;line-height:1.25}.markdown-body h1 .octicon-link,.markdown-body h2 .octicon-link,.markdown-body h3 .octicon-link,.markdown-body h4 .octicon-link,.markdown-body h5 .octicon-link,.markdown-body h6 .octicon-link{color:#000;vertical-align:middle;visibility:hidden}.markdown-body h1:hover .anchor,.markdown-body h2:hover .anchor,.markdown-body h3:hover .anchor,.markdown-body h4:hover .anchor,.markdown-body h5:hover .anchor,.markdown-body h6:hover .anchor{text-decoration:none}.markdown-body h1:hover .anchor .octicon-link,.markdown-body h2:hover .anchor .octicon-link,.markdown-body h3:hover .anchor .octicon-link,.markdown-body h4:hover .anchor .octicon-link,.markdown-body h5:hover .anchor .octicon-link,.markdown-body h6:hover .anchor .octicon-link{visibility:visible}.markdown-body h1 code,.markdown-body h1 tt,.markdown-body h2 code,.markdown-body h2 tt,.markdown-body h3 code,.markdown-body h3 tt,.markdown-body h4 code,.markdown-body h4 tt,.markdown-body h5 code,.markdown-body h5 tt,.markdown-body h6 code,.markdown-body h6 tt{font-size:inherit}.markdown-body h1{font-size:2em}.markdown-body h1,.markdown-body h2{padding-bottom:.3em;border-bottom:1px solid #eee}.markdown-body h2{font-size:1.5em}.markdown-body h3{font-size:1.25em}.markdown-body h4{font-size:1em}.markdown-body h5{font-size:.875em}.markdown-body h6{font-size:.85em;color:#777}.markdown-body ol,.markdown-body ul{padding-left:2em}.markdown-body ol.no-list,.markdown-body ul.no-list{padding:0;list-style-type:none}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:0;margin-bottom:0}.markdown-body li>p{margin-top:16px}.markdown-body li+li{padding-top:.25em}.markdown-body dl{padding:0}.markdown-body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}.markdown-body dl dd{padding:0 16px;margin-bottom:16px}.markdown-body table{display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}.markdown-body table th{font-weight:700}.markdown-body table td,.markdown-body table th{padding:6px 13px;border:1px solid #ddd}.markdown-body table tr{background-color:#fff;border-top:1px solid #ccc}.markdown-body table tr:nth-child(2n){background-color:#f8f8f8}.markdown-body img{max-width:100%;box-sizing:content-box;background-color:#fff}.markdown-body img[align=right]{padding-left:20px}.markdown-body img[align=left]{padding-right:20px}.markdown-body .emoji{max-width:none;vertical-align:text-top;background-color:transparent}.markdown-body span.frame{display:block;overflow:hidden}.markdown-body span.frame>span{display:block;float:left;width:auto;padding:7px;margin:13px 0 0;overflow:hidden;border:1px solid #ddd}.markdown-body span.frame span img{display:block;float:left}.markdown-body span.frame span span{display:block;padding:5px 0 0;clear:both;color:#333}.markdown-body span.align-center{display:block;overflow:hidden;clear:both}.markdown-body span.align-center>span{display:block;margin:13px auto 0;overflow:hidden;text-align:center}.markdown-body span.align-center span img{margin:0 auto;text-align:center}.markdown-body span.align-right{display:block;overflow:hidden;clear:both}.markdown-body span.align-right>span{display:block;margin:13px 0 0;overflow:hidden;text-align:right}.markdown-body span.align-right span img{margin:0;text-align:right}.markdown-body span.float-left{display:block;float:left;margin-right:13px;overflow:hidden}.markdown-body span.float-left span{margin:13px 0 0}.markdown-body span.float-right{display:block;float:right;margin-left:13px;overflow:hidden}.markdown-body span.float-right>span{display:block;margin:13px auto 0;overflow:hidden;text-align:right}.markdown-body code,.markdown-body tt{padding:0;padding-top:.2em;padding-bottom:.2em;margin:0;font-size:85%;background-color:rgba(0,0,0,.04);border-radius:3px}.markdown-body code:after,.markdown-body code:before,.markdown-body tt:after,.markdown-body tt:before{letter-spacing:-.2em;content:"\00a0"}.markdown-body code br,.markdown-body tt br{display:none}.markdown-body del code{text-decoration:inherit}.markdown-body pre{word-wrap:normal}.markdown-body pre>code{padding:0;margin:0;font-size:100%;word-break:normal;white-space:pre;background:transparent;border:0}.markdown-body .highlight{margin-bottom:16px}.markdown-body .highlight pre{margin-bottom:0;word-break:normal}.markdown-body .highlight pre,.markdown-body pre{padding:16px;overflow:auto;font-size:85%;line-height:1.45;background-color:#f7f7f7;border-radius:3px}.markdown-body pre code,.markdown-body pre tt{display:inline;max-width:auto;padding:0;margin:0;overflow:visible;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}.markdown-body pre code:after,.markdown-body pre code:before,.markdown-body pre tt:after,.markdown-body pre tt:before{content:normal}.markdown-body .csv-data td,.markdown-body .csv-data th{padding:5px;overflow:hidden;font-size:12px;line-height:1;text-align:left;white-space:nowrap}.markdown-body .csv-data .blob-line-num{padding:10px 8px 9px;text-align:right;background:#fff;border:0}.markdown-body .csv-data tr{border-top:0}.markdown-body .csv-data th{font-weight:700;background:#f8f8f8;border-top:0}.news .alert .markdown-body blockquote{padding:0 0 0 40px;border:0 none}.activity-tab .news .alert .commits,.activity-tab .news .markdown-body blockquote{padding-left:0}.task-list-item{list-style-type:none}.task-list-item label{font-weight:400}.task-list-item.enabled label{cursor:pointer}.task-list-item+.task-list-item{margin-top:3px}.task-list-item-checkbox{float:left;margin:.31em 0 .2em -1.3em!important;vertical-align:middle;cursor:default!important}.markdown-body{padding-top:40px;padding-bottom:40px;max-width:758px;overflow:visible!important;position:relative}.markdown-body .emoji{vertical-align:top}.markdown-body pre{border:inherit!important}.markdown-body code{color:inherit!important}.markdown-body pre code .wrapper{display:-moz-inline-flex;display:-ms-inline-flex;display:-o-inline-flex;display:inline-flex}.markdown-body pre code .gutter{float:left;overflow:hidden;-webkit-user-select:none;user-select:none}.markdown-body pre code .gutter.linenumber{text-align:right;position:relative;display:inline-block;cursor:default;z-index:4;padding:0 8px 0 0;min-width:20px;box-sizing:content-box;color:#afafaf!important;border-right:3px solid #6ce26c!important}.markdown-body pre code .gutter.linenumber>span:before{content:attr(data-linenumber)}.markdown-body pre code .code{float:left;margin:0 0 0 16px}.markdown-body .gist .line-numbers{border-left:none;border-top:none;border-bottom:none}.markdown-body .gist .line-data{border:none}.markdown-body .gist table{border-spacing:0;border-collapse:inherit!important}.markdown-body code[data-gist-id]{background:none;padding:0}.markdown-body code[data-gist-id]:after,.markdown-body code[data-gist-id]:before{content:""}.markdown-body code[data-gist-id] .blob-num{border:unset}.markdown-body code[data-gist-id] table{overflow:unset;margin-bottom:unset}.markdown-body code[data-gist-id] table tr{background:unset}.markdown-body[dir=rtl] pre{direction:ltr}.markdown-body[dir=rtl] code{direction:ltr;unicode-bidi:embed}.markdown-body .alert>p{margin-bottom:0}.markdown-body pre.abc,.markdown-body pre.flow-chart,.markdown-body pre.graphviz,.markdown-body pre.mermaid,.markdown-body pre.sequence-diagram,.markdown-body pre.vega{text-align:center;background-color:inherit;border-radius:0;white-space:inherit;overflow:visible}.markdown-body pre.abc>code,.markdown-body pre.flow-chart>code,.markdown-body pre.graphviz>code,.markdown-body pre.mermaid>code,.markdown-body pre.sequence-diagram>code,.markdown-body pre.vega>code{text-align:left}.markdown-body pre.abc>svg,.markdown-body pre.flow-chart>svg,.markdown-body pre.graphviz>svg,.markdown-body pre.mermaid>svg,.markdown-body pre.sequence-diagram>svg,.markdown-body pre.vega>svg{max-width:100%;height:100%}.markdown-body pre>code.wrap{white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word}.markdown-body .alert>p,.markdown-body .alert>ul{margin-bottom:0}.markdown-body summary{display:list-item}.markdown-body summary:focus{outline:none}.markdown-body details summary{cursor:pointer}.markdown-body details:not([open])>:not(summary){display:none}.markdown-body figure{margin:1em 40px}.markdown-body .mark,.markdown-body mark{background-color:#fff1a7}.vimeo,.youtube{cursor:pointer;display:table;text-align:center;background-position:50%;background-repeat:no-repeat;background-size:contain;background-color:#000;overflow:hidden}.vimeo,.youtube{position:relative;width:100%}.youtube{padding-bottom:56.25%}.vimeo img{width:100%;object-fit:contain;z-index:0}.youtube img{object-fit:cover;z-index:0}.vimeo iframe,.youtube iframe,.youtube img{width:100%;height:100%;position:absolute;top:0;left:0}.vimeo iframe,.youtube iframe{vertical-align:middle;z-index:1}.vimeo .icon,.youtube .icon{position:absolute;height:auto;width:auto;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;opacity:.3;transition:opacity .2s;z-index:0}.vimeo:hover .icon,.youtube:hover .icon{opacity:.6;transition:opacity .2s}.slideshare .inner,.speakerdeck .inner{position:relative;width:100%}.slideshare .inner iframe,.speakerdeck .inner iframe{position:absolute;top:0;bottom:0;left:0;right:0;width:100%;height:100%}.figma{display:table;position:relative;width:100%;padding-bottom:56.25%}.figma iframe{position:absolute;top:0;bottom:0;left:0;right:0;width:100%;height:100%;border:1px solid #eee}.MJX_Assistive_MathML{display:none}#MathJax_Message{z-index:1000!important}.ui-infobar{position:relative;z-index:2;max-width:760px;margin:25px auto -25px;color:#777}.toc .invisable-node{list-style-type:none}.ui-toc{position:fixed;bottom:20px;z-index:998}.ui-toc.both-mode{margin-left:8px}.ui-toc.both-mode .ui-toc-label{height:40px;padding:10px 4px;border-top-left-radius:0;border-bottom-left-radius:0}.ui-toc-label{background-color:#e6e6e6;border:none;color:#868686;transition:opacity .2s}.ui-toc .open .ui-toc-label{opacity:1;color:#fff;transition:opacity .2s}.ui-toc-label:focus{opacity:.3;background-color:#ccc;color:#000}.ui-toc-label:hover{opacity:1;background-color:#ccc;transition:opacity .2s}.ui-toc-dropdown{margin-top:20px;margin-bottom:20px;padding-left:10px;padding-right:10px;max-width:45vw;width:25vw;max-height:70vh;overflow:auto;text-align:inherit}.ui-toc-dropdown>.toc{max-height:calc(70vh - 100px);overflow:auto}.ui-toc-dropdown[dir=rtl] .nav{padding-right:0;letter-spacing:.0029em}.ui-toc-dropdown a{overflow:hidden;text-overflow:ellipsis;white-space:pre}.ui-toc-dropdown .nav>li>a{display:block;padding:4px 20px;font-size:13px;font-weight:500;color:#767676}.ui-toc-dropdown .nav>li:first-child:last-child>ul,.ui-toc-dropdown .toc.expand ul{display:block}.ui-toc-dropdown .nav>li>a:focus,.ui-toc-dropdown .nav>li>a:hover{padding-left:19px;color:#000;text-decoration:none;background-color:transparent;border-left:1px solid #000}.ui-toc-dropdown[dir=rtl] .nav>li>a:focus,.ui-toc-dropdown[dir=rtl] .nav>li>a:hover{padding-right:19px;border-left:none;border-right:1px solid #000}.ui-toc-dropdown .nav>.active:focus>a,.ui-toc-dropdown .nav>.active:hover>a,.ui-toc-dropdown .nav>.active>a{padding-left:18px;font-weight:700;color:#000;background-color:transparent;border-left:2px solid #000}.ui-toc-dropdown[dir=rtl] .nav>.active:focus>a,.ui-toc-dropdown[dir=rtl] .nav>.active:hover>a,.ui-toc-dropdown[dir=rtl] .nav>.active>a{padding-right:18px;border-left:none;border-right:2px solid #000}.ui-toc-dropdown .nav .nav{display:none;padding-bottom:10px}.ui-toc-dropdown .nav>.active>ul{display:block}.ui-toc-dropdown .nav .nav>li>a{padding-top:1px;padding-bottom:1px;padding-left:30px;font-size:12px;font-weight:400}.ui-toc-dropdown[dir=rtl] .nav .nav>li>a{padding-right:30px}.ui-toc-dropdown .nav .nav>li>ul>li>a{padding-top:1px;padding-bottom:1px;padding-left:40px;font-size:12px;font-weight:400}.ui-toc-dropdown[dir=rtl] .nav .nav>li>ul>li>a{padding-right:40px}.ui-toc-dropdown .nav .nav>li>a:focus,.ui-toc-dropdown .nav .nav>li>a:hover{padding-left:29px}.ui-toc-dropdown[dir=rtl] .nav .nav>li>a:focus,.ui-toc-dropdown[dir=rtl] .nav .nav>li>a:hover{padding-right:29px}.ui-toc-dropdown .nav .nav>li>ul>li>a:focus,.ui-toc-dropdown .nav .nav>li>ul>li>a:hover{padding-left:39px}.ui-toc-dropdown[dir=rtl] .nav .nav>li>ul>li>a:focus,.ui-toc-dropdown[dir=rtl] .nav .nav>li>ul>li>a:hover{padding-right:39px}.ui-toc-dropdown .nav .nav>.active:focus>a,.ui-toc-dropdown .nav .nav>.active:hover>a,.ui-toc-dropdown .nav .nav>.active>a{padding-left:28px;font-weight:500}.ui-toc-dropdown[dir=rtl] .nav .nav>.active:focus>a,.ui-toc-dropdown[dir=rtl] .nav .nav>.active:hover>a,.ui-toc-dropdown[dir=rtl] .nav .nav>.active>a{padding-right:28px}.ui-toc-dropdown .nav .nav>.active>.nav>.active:focus>a,.ui-toc-dropdown .nav .nav>.active>.nav>.active:hover>a,.ui-toc-dropdown .nav .nav>.active>.nav>.active>a{padding-left:38px;font-weight:500}.ui-toc-dropdown[dir=rtl] .nav .nav>.active>.nav>.active:focus>a,.ui-toc-dropdown[dir=rtl] .nav .nav>.active>.nav>.active:hover>a,.ui-toc-dropdown[dir=rtl] .nav .nav>.active>.nav>.active>a{padding-right:38px}.markdown-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,sans-serif}html[lang^=ja] .markdown-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,Hiragino Kaku Gothic Pro,ヒラギノ角ゴ Pro W3,Osaka,Meiryo,メイリオ,MS Gothic,ＭＳ\ ゴシック,sans-serif}html[lang=zh-tw] .markdown-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,PingFang TC,Microsoft JhengHei,微軟正黑,sans-serif}html[lang=zh-cn] .markdown-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,PingFang SC,Microsoft YaHei,微软雅黑,sans-serif}html .markdown-body[lang^=ja]{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,Hiragino Kaku Gothic Pro,ヒラギノ角ゴ Pro W3,Osaka,Meiryo,メイリオ,MS Gothic,ＭＳ\ ゴシック,sans-serif}html .markdown-body[lang=zh-tw]{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,PingFang TC,Microsoft JhengHei,微軟正黑,sans-serif}html .markdown-body[lang=zh-cn]{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,PingFang SC,Microsoft YaHei,微软雅黑,sans-serif}html[lang^=ja] .ui-toc-dropdown{font-family:Source Sans Pro,Helvetica,Arial,Meiryo UI,MS PGothic,ＭＳ\ Ｐゴシック,sans-serif}html[lang=zh-tw] .ui-toc-dropdown{font-family:Source Sans Pro,Helvetica,Arial,Microsoft JhengHei UI,微軟正黑UI,sans-serif}html[lang=zh-cn] .ui-toc-dropdown{font-family:Source Sans Pro,Helvetica,Arial,Microsoft YaHei UI,微软雅黑UI,sans-serif}html .ui-toc-dropdown[lang^=ja]{font-family:Source Sans Pro,Helvetica,Arial,Meiryo UI,MS PGothic,ＭＳ\ Ｐゴシック,sans-serif}html .ui-toc-dropdown[lang=zh-tw]{font-family:Source Sans Pro,Helvetica,Arial,Microsoft JhengHei UI,微軟正黑UI,sans-serif}html .ui-toc-dropdown[lang=zh-cn]{font-family:Source Sans Pro,Helvetica,Arial,Microsoft YaHei UI,微软雅黑UI,sans-serif}.ui-affix-toc{position:fixed;top:0;max-width:15vw;max-height:70vh;overflow:auto}.back-to-top,.expand-toggle,.go-to-bottom{display:block;padding:4px 10px;margin-top:10px;margin-left:10px;font-size:12px;font-weight:500;color:#999}.back-to-top:focus,.back-to-top:hover,.expand-toggle:focus,.expand-toggle:hover,.go-to-bottom:focus,.go-to-bottom:hover{color:#563d7c;text-decoration:none}.back-to-top,.go-to-bottom{margin-top:0}.ui-user-icon{width:20px;height:20px;display:block;border-radius:50%;margin-top:2px;margin-bottom:2px;margin-right:5px;background-position:50%;background-repeat:no-repeat;background-size:cover}.ui-user-icon.small{width:18px;height:18px;display:inline-block;vertical-align:middle;margin:0 0 .2em}.ui-infobar>small>span{line-height:22px}.ui-infobar>small .dropdown{display:inline-block}.ui-infobar>small .dropdown a:focus,.ui-infobar>small .dropdown a:hover{text-decoration:none}.ui-more-info{color:#888;cursor:pointer;vertical-align:middle}.ui-more-info .fa{font-size:16px}.ui-connectedGithub,.ui-published-note{color:#888}.ui-connectedGithub{line-height:23px;white-space:nowrap}.ui-connectedGithub a.file-path{color:#888;text-decoration:none;padding-left:22px}.ui-connectedGithub a.file-path:active,.ui-connectedGithub a.file-path:hover{color:#888;text-decoration:underline}.ui-connectedGithub .fa{font-size:20px}.ui-published-note .fa{font-size:20px;vertical-align:top}.unselectable{-webkit-user-select:none;-o-user-select:none;user-select:none}.selectable{-webkit-user-select:text;-o-user-select:text;user-select:text}@media print{blockquote,div,img,pre,table{page-break-inside:avoid!important}a[href]:after{font-size:12px!important}}.markdown-body.slides{position:relative;z-index:1;color:#222}.markdown-body.slides:before{content:"";display:block;position:absolute;top:0;left:0;right:0;bottom:0;z-index:-1;background-color:currentColor;box-shadow:0 0 0 50vw}.markdown-body.slides section[data-markdown]{position:relative;margin-bottom:1.5em;background-color:#fff;text-align:center}.markdown-body.slides section[data-markdown] code{text-align:left}.markdown-body.slides section[data-markdown]:before{content:"";display:block;padding-bottom:56.23%}.markdown-body.slides section[data-markdown]>div:first-child{position:absolute;top:50%;left:1em;right:1em;transform:translateY(-50%);max-height:100%;overflow:hidden}.markdown-body.slides section[data-markdown]>ul{display:inline-block}.markdown-body.slides>section>section+section:after{content:"";position:absolute;top:-1.5em;right:1em;height:1.5em;border:3px solid #777}.site-ui-font{font-family:Source Sans Pro,Helvetica,Arial,sans-serif}html[lang^=ja] .site-ui-font{font-family:Source Sans Pro,Helvetica,Arial,Hiragino Kaku Gothic Pro,ヒラギノ角ゴ Pro W3,Osaka,Meiryo,メイリオ,MS Gothic,ＭＳ\ ゴシック,sans-serif}html[lang=zh-tw] .site-ui-font{font-family:Source Sans Pro,Helvetica,Arial,PingFang TC,Microsoft JhengHei,微軟正黑,sans-serif}html[lang=zh-cn] .site-ui-font{font-family:Source Sans Pro,Helvetica,Arial,PingFang SC,Microsoft YaHei,微软雅黑,sans-serif}body{font-smoothing:subpixel-antialiased!important;-webkit-font-smoothing:subpixel-antialiased!important;-moz-osx-font-smoothing:auto!important;text-shadow:0 0 1em transparent,1px 1px 1.2px rgba(0,0,0,.004);-webkit-overflow-scrolling:touch;letter-spacing:.025em;font-family:Source Sans Pro,Helvetica,Arial,sans-serif}html[lang^=ja] body{font-family:Source Sans Pro,Helvetica,Arial,Hiragino Kaku Gothic Pro,ヒラギノ角ゴ Pro W3,Osaka,Meiryo,メイリオ,MS Gothic,ＭＳ\ ゴシック,sans-serif}html[lang=zh-tw] body{font-family:Source Sans Pro,Helvetica,Arial,PingFang TC,Microsoft JhengHei,微軟正黑,sans-serif}html[lang=zh-cn] body{font-family:Source Sans Pro,Helvetica,Arial,PingFang SC,Microsoft YaHei,微软雅黑,sans-serif}abbr[title]{border-bottom:none;text-decoration:underline;-webkit-text-decoration:underline dotted;text-decoration:underline dotted}abbr[data-original-title],abbr[title]{cursor:help}body.modal-open{overflow-y:auto;padding-right:0!important}
+    </style>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    	<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js" integrity="sha256-3Jy/GbSLrg0o9y5Z5n1uw0qxZECH7C6OQpVBgNFYa0g=" crossorigin="anonymous"></script>
+    	<script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js" integrity="sha256-g6iAfvZp+nDQ2TdTR/VVKJf3bGro4ub5fvWSWVRi2NE=" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js" integrity="sha256-8E4Is26QH0bD52WoQpcB+R/tcWQtpzlCojrybUd7Mxo=" crossorigin="anonymous"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div id="doc" class="markdown-body container-fluid comment-enabled comment-inner" data-hard-breaks="true"><h1 id="CIA-Lab-5---Mail-Transfer-Agents-MTA" data-id="CIA-Lab-5---Mail-Transfer-Agents-MTA"><a class="anchor hidden-xs" href="#CIA-Lab-5---Mail-Transfer-Agents-MTA" title="CIA-Lab-5---Mail-Transfer-Agents-MTA"><span class="octicon octicon-link"></span></a><span>CIA Lab 5 - Mail Transfer Agents (MTA)</span></h1><p><strong><span>Name: Vladimir Shelkovnikov</span></strong></p><hr><h2 id="Task-1---DNS-Insecurity" data-id="Task-1---DNS-Insecurity"><a class="anchor hidden-xs" href="#Task-1---DNS-Insecurity" title="Task-1---DNS-Insecurity"><span class="octicon octicon-link"></span></a><span>Task 1 - DNS Insecurity</span></h2><div class="alert alert-success" data-original-title="" title="">
+<h4 id="Task-1---Install" data-id="Task-1---Install"><a class="anchor hidden-xs" href="#Task-1---Install" title="Task-1---Install"><span class="octicon octicon-link"></span></a><span>Task 1 - Install</span></h4>
+<p><span>There are many different MTAs available, both open source and proprietary. In this assignment we will be looking at two well known open source MTAs. Exim was originally based on the Smail MTA, but has since diverged. Exim is also the default MTA for Debian, and is currently the most used. Postfix is one of the most secure MTAs. Postfix is somewhat different from other MTAs in that it consists of many small programs. This setup agrees with the UNIX philosophy, but it also complicates an integration into the UNIX daemon</span><br>
+<span>configuration.</span></p>
+<ol>
+<li><span>Install from source code</span><br>
+<span>a) First make sure that your system does not contain a pre-installed version of the MTA of your choice, if so, remove it before you continue.</span><br>
+<span>b) Make sure the source code is retrieved from a secure location. Use the official website for the MTA of your choice.</span><br>
+<span>c) Because it is important that an MTA be correct and secure it is often signed using a digital PGP signature. If your MTA is signed then make sure you have downloaded the correct sources by checking the validity of the key and the signature.</span><br>
+<span>d) There are a number of options that you will have to enter before compilation, so that the functionality can be compiled into the program. Make sure the basic install holds all the necessary functionality. Show the options you configured.</span></li>
+<li><span>Most of the options for an MTA can be found in a configuration file that will be loaded when the MTA starts. It is recommended to start with an example configuration that looks a lot like what you need for now. Show how you adapt it to your needs .</span></li>
+<li><span>Configure:</span><br>
+<span>a) Add a local account on your experimental machine and make sure that the MTA can deliver mail to it. Show the required configuration.</span><br>
+<span>b) Add to your log an email received by this account. Do not forget the full headers!</span><br>
+<span>c) Also make sure that any email intended for postmaster@st</span>&lt;X&gt;<span>.sne21.ru is delivered to this account. Show the full email as delivered to the new account and the required configuration.</span></li>
+</ol>
+</div><hr><h2 id="Implementation" data-id="Implementation"><a class="anchor hidden-xs" href="#Implementation" title="Implementation"><span class="octicon octicon-link"></span></a><span>Implementation</span></h2><p><span>First, I checked whether I have a pre-installed MTA (Figure 1).</span></p><center>
+<p><img src="https://i.imgur.com/Opg4tlG.png" alt="" loading="lazy"><br>
+<span>Figure 1 - Checked version</span></p>
+</center><p><span>So I have neither Postfix nor Exim. I choose exim as my MTA [1]. I downloaded exim 4.9 and checked it signature (Figure 2).</span></p><center>
+<p><img src="https://i.imgur.com/T9I1adV.png" alt="" loading="lazy"><br>
+<span>Figure 2 - Checking the signature</span></p>
+</center><p><span>To install exim from source code, I need to create Makefile by editing /src/EDITME. There I have to configure parameters such as directories, group and user.</span></p><p><span>I have set the following parameter for local mail: </span><code>System mail name - localhost</code></p><p data-original-title="" title=""><span>Then I generated the certificate using the following command:</span><br>
+<code>sudo /usr/share/doc/exim4-base/examples/exim-gencert</code><span>.</span><br>
+<span>And added the line </span><code>MAIN_TLS_ENABLE = yes</code><span> in /etc/exim4/exim4.conf.template before the </span><code>.ifdef MAIN_TLS_ENABLE</code></p><p><span>Then I sent mail to my localhost (Figure 3).</span></p><center>
+<p><img src="https://i.imgur.com/m71OLM3.png" alt="" loading="lazy"><br>
+<span>Figure 3 - Sending email</span></p>
+</center><p><span>Then I can read it in /var/mail/ubuntu (Figure 4).</span></p><center>
+<p><img src="https://i.imgur.com/HDUuhnT.png" alt="" loading="lazy"><br>
+<span>Figure 4 - Getting the email</span></p>
+</center><p><span>I also received a message about a new mail (Figure 5)</span></p><center>
+<p><img src="https://i.imgur.com/IHF7i2o.png" alt="" loading="lazy"><br>
+<span>Figure 5 - New mail</span></p>
+</center><p><span>All of the above steps were performed in a virtual machine. Then I repeated these steps for my workstation, but configured it as the Internet with system mail name - </span><a href="http://st12.sne21.ru" target="_blank" rel="noopener"><span>st12.sne21.ru</span></a><span>.</span></p><p><span>Then I successufuly sent an email to </span><a href="mailto:postmaster@st12.sne21.ru" target="_blank" rel="noopener"><span>postmaster@st12.sne21.ru</span></a><span> as shown in Figure 6.</span></p><center>
+<p><img src="https://i.imgur.com/FIE0j4B.png" alt="" loading="lazy"><br>
+<span>Figure 6 - Sent email to </span><a href="mailto:postmaster@st12.sne21.ru" target="_blank" rel="noopener"><span>postmaster@st12.sne21.ru</span></a></p>
+</center><p><span>Domain </span><a href="http://sne21.ru" target="_blank" rel="noopener"><span>sne21.ru</span></a><span> contains records that points to my </span><a href="http://st12.sne21.ru" target="_blank" rel="noopener"><span>st12.sne21.ru</span></a><span> domain. So now I have to get an email to my AWS. Let’s check it (Figure 7).</span></p><center>
+<p><img src="https://i.imgur.com/WH3MUlD.png" alt="" loading="lazy"><br>
+<span>Figure 7 - Received email</span></p>
+</center><p><span>It was recieved from 188.130.155.51 (public) because IP 10.1.1.212 is private.</span></p><hr><h2 id="Task-2---Sending-mail---email-validation---SPF-amp-DKIM" data-id="Task-2---Sending-mail---email-validation---SPF-amp-DKIM"><a class="anchor hidden-xs" href="#Task-2---Sending-mail---email-validation---SPF-amp-DKIM" title="Task-2---Sending-mail---email-validation---SPF-amp-DKIM"><span class="octicon octicon-link"></span></a><span>Task 2 - Sending mail - email validation - SPF &amp; DKIM</span></h2><div class="alert alert-success" data-original-title="" title="">
+<p><span>Cloud providers block standard SMTP port (25) for all outbound connections on their cloud instances to protect their IP address pools from having bad reputation.</span><br>
+<span>Since your setup is deployed in the cloud, you are going to face that issue. To overcome this situation there are relay email servers that can accept your outgoing mail on other ports (587, 465, 2525) and forward it to the original destination server.</span><br>
+<span>To provide such functionality this servers</span></p>
+<ul>
+<li><span>Provide you with credentials that should be used to submit your mail;</span></li>
+<li><span>Require you to placing SPF/DKIM records that</span>
+<ol>
+<li><span>serves as a form of verification that you the domain owner</span></li>
+<li><span>used by original mail destination server to verify that relay server is eligible to send mail from your domain.</span></li>
+</ol>
+</li>
+</ul>
+<p><span>a. Write a small paragraph that highlights the advantages and disadvantages of SPF and DomainKeys Identified Mail (DKIM). What would you choose at a first glance and why?</span><br>
+<span>b. Set up your mail server to use a relay server to be able to send outgoing mail for different domains.</span><br>
+<span>c. Test how your mail is delivered to commonly known mail servers (f.e. gmail). Provide full email/MTA headers to see how SPF/DKIM were delivered.</span></p>
+</div><hr><center>
+<h2 id="Configuring-mailgun" data-id="Configuring-mailgun" data-original-title="" title=""><a class="anchor hidden-xs" href="#Configuring-mailgun" title="Configuring-mailgun"><span class="octicon octicon-link"></span></a><span>Configuring mailgun</span></h2>
+</center><hr><p><span>I have registered an account with mailgun. Then first I need to add new records to the domain to verify for mailgun (Figure 8).</span></p><center>
+<p><img src="https://i.imgur.com/ExqaL5E.png" alt="" loading="lazy"><br>
+<span>Figure 8 - Configuring domain for mailgun</span></p>
+</center><p><span>Then I configured exim as shown in Figure 9.</span></p><center>
+<p><img src="https://i.imgur.com/NzghjQq.png" alt="" loading="lazy"><br>
+<span>Figure 9 - Configuration of exim</span></p>
+</center><p><span>I have installed mailgun as a smarthost. And installed ports 25, 587 and 465 for listening. Also I set my SMTP credentials from mailgun (Figure 10).</span></p><center>
+<p><img src="https://i.imgur.com/BHAVvru.png" alt="" loading="lazy"><br>
+<span>Figure 10 - SMTP credentials</span></p>
+</center><p><span>Other way to configured it is editing exim.conf file by adding following block:</span><br>
+<span>This is the constances at the begining of the file</span></p><pre><code>ADDRESS = smtp.mailgun.org
+PORT = 587
+USER = postmaster@st12.sne21.ru
+PASSWORD = d143e1b43b35953b84097bd5a39f7a42-90346a2d-930f2d88
+</code></pre><p><span>This is router configuration, which Specifies how addresses are handled</span></p><pre><code>.ifdef ADDRESS
+smarthost:
+  driver = manualroute
+  domains = ! +local_domains
+  transport = smarthost_smtp
+  route_list = * ADDRESS
+  host_find_failed = defer
+  no_more
+.endif
+</code></pre><p><span>This is transport configuration. This transport is used for delivering messages over SMTP connections</span></p><pre><code>.ifdef ADDRESS
+smarthost_smtp:
+  driver = smtp
+  .ifdef PORT
+  port = PORT
+  .endif
+  hosts_require_auth = ADDRESS
+  hosts_require_tls = ADDRESS
+.endif
+</code></pre><p><span>This authentication configuration</span></p><pre><code>.ifdef ADDRESS
+smarthost_login:                            
+  driver = plaintext                    
+  public_name = LOGIN           
+  hide client_send =:USER:PASSWORD
+.endif 
+</code></pre><hr><center>
+<h2 id="Test-of-email" data-id="Test-of-email"><a class="anchor hidden-xs" href="#Test-of-email" title="Test-of-email"><span class="octicon octicon-link"></span></a><span>Test of email</span></h2>
+</center><hr><p><span>I send email from AWS to an external email using mailgun (Figure 11).</span></p><center>
+<p><img src="https://i.imgur.com/77qF2p8.png" alt="" loading="lazy"><br>
+<span>Figure 11 - Sended mail</span></p>
+</center><p><span>Figure 12 shows that I received this email to my AWS.</span></p><center>
+<p><img src="https://i.imgur.com/ZCGCuKA.png" alt="" loading="lazy"><br>
+<span>Figure 12 - Received email</span></p>
+</center><p><span>It is encrypted with base64</span></p><hr><center>
+<h3 id="SPFDKIM" data-id="SPFDKIM"><a class="anchor hidden-xs" href="#SPFDKIM" title="SPFDKIM"><span class="octicon octicon-link"></span></a><span>SPF/DKIM</span></h3>
+</center><hr><blockquote data-original-title="" title="">
+<p><span>Theory</span></p>
+</blockquote><p><span>SPF and DKIM are DNS records, without which the letter will most likely not be delivered or will fall into “Spam”.</span></p><p><span>The sender’s policy structure is a record with a list of servers and IP addresses from which it is allowed to send emails on behalf of the domain . By setting up SPF, you will inform the mail services that you sent the letter. If the email is sent from the IP server or, which is not in the record, the provider will consider it as spam.</span></p><p><span>Domain Keys Identified Mail (DKIM) - digital signature of emails. A configured DKIM signature increases the level of trust in the sender on the part of the provider.</span></p><p><span>The principle of operation consists of two stages: the sending server and the receiving server. The process is controlled by a private and public key.</span><br>
+<span>The public key is placed in the DNS record in the TXT field. With its help, the receiving server decrypts the signature and checks that the information hidden in it corresponds to the contents of the letter. If there are any inconsistencies, then the letter ends up in the “Spam” folder.</span></p><p><span>SPF checks the IP address of the last SMTP server hop against the authorized list. DKIM verifies that the mail was originally sent by this domain, and guarantees its integrity.</span><br>
+<span>Valid messages with the DKIM signature can be used as spam or phishing if they are re-sent without changes. SPF does not check the integrity of the message.</span></p><p><span>In my opinion, integrity is the most important characteristic of email, so I choose DKIM.</span></p><hr><p><span>I added following line to /etc/exim4/exim4.conf.template to use my DKIM:</span></p><pre><code>DKIM_KEY_FILE = "/etc/exim4/dkim/st12.sne21.ru.key"
+DKIM_PRIVATE_KEY = ${if exists{DKIM_KEY_FILE}{DKIM_KEY_FILE}{0}}
+DKIM_SELECTOR = email
+</code></pre><p><span>Figure 13 shows the process of generating public and private keys​.</span></p><center>
+<p><img src="https://i.imgur.com/Piy7pCV.png" alt="" loading="lazy"><br>
+<span>Figure 13 - Generating keys</span></p>
+</center><p><span>Then I changed the zone file as shown in Figure 14 by adding the key.</span></p><center>
+<p><img src="https://i.imgur.com/sajXqO7.png" alt="" loading="lazy"><br>
+<span>Figure 14 - Adding key to the zone</span></p>
+</center><p><span>Let’s check it out by sending an email to </span><a href="http://gmail.com" target="_blank" rel="noopener"><span>gmail.com</span></a><span> (Figures 15, 16).</span></p><center>
+<p><img src="https://i.imgur.com/wfnFQhK.png" alt="" loading="lazy"><br>
+<span>Figure 15 - Information about recieved email</span></p>
+<p><img src="https://i.imgur.com/WEcPgFM.png" alt="" loading="lazy"><br>
+<span>Figure 16 - Recieved email</span></p>
+</center><p><span>It is signed by my domain (dkim). Then it went to mailgun, where it was also signed (dkim). And finally, it went to gmail and got a third record (spf).</span></p><hr><h2 id="Task-3---Mail-backup" data-id="Task-3---Mail-backup"><a class="anchor hidden-xs" href="#Task-3---Mail-backup" title="Task-3---Mail-backup"><span class="octicon octicon-link"></span></a><span>Task 3 - Mail backup</span></h2><div class="alert alert-success">
+<p><span>You have backup:</span><br>
+<span>a) Adapt the DNS information for your domain, so that the backup MTA on your partner’s server can be found. (…your partner configures its MTA as a backup MTA…)</span><br>
+<span>b) Validate by shutting your service down and sending a message to your domain (…your partner sees its logs and where the message is temporarily stored…).</span><br>
+<span>c) Bring your service back up and wait.</span></p>
+<p><span>You provide backup:</span><br>
+<span>a) Make your MTA act as a backup for your partner’s domain.</span><br>
+<span>b) Show the logs while doing your mate’s acceptance test and show where the message is temporarily stored.</span><br>
+<span>c) Once your partner’s MTA is back online, eventually force an immediate delivery and show your mail logs.</span></p>
+</div><hr><center>
+<h3 id="I-have-backup" data-id="I-have-backup"><a class="anchor hidden-xs" href="#I-have-backup" title="I-have-backup"><span class="octicon octicon-link"></span></a><span>I have backup</span></h3>
+</center><hr><p><span>To become primary one, I set the MX record with Alex’s IP address - </span><code>backup  IN      A       3.22.80.181</code><span>.</span></p><p><span>To become a backup server, Alex added related options to </span><code>/etc/postfix/main.cf</code><span> file.</span></p><pre><code>#Backup MX
+relay_domains = $mydestination, st12.sne21.ru
+transport_maps = hash:/etc/postfix/transport
+relay_recipient_maps = hash:/etc/postfix/relay_recipients
+</code></pre><p><span>In the transport file, he mentioned primary server domain, </span><code>service:ip:port</code><span> numbers.</span><br>
+<code>st12.sne21.ru smtp:3.140.193.56:587 </code></p><p><span>In the relay_recipients file, he used wildcard and added all emails under certain domains.</span></p><pre><code>@st8.sne21.ru   OK
+@st12.sne21.ru  OK 
+</code></pre><p><span>First, I checked my mailboxes (Figures 17, 18).</span></p><center>
+<p><img src="https://i.imgur.com/TxShsgI.png" alt="" loading="lazy"><br>
+<span>Figure 17 - ubuntu mailbox</span></p>
+<p><img src="https://i.imgur.com/YPX6c9n.png" alt="" loading="lazy"><br>
+<span>Figure 18 - root mailbox</span></p>
+</center><p><span>Both of them are empty (echo “” &gt; var/mail/mail).</span></p><p><span>Then I turn off my exim ( sudo systemctl stop exim4) and send an email to </span><a href="mailto:ubuntu@st12.sne21.ru" target="_blank" rel="noopener"><span>ubuntu@st12.sne21.ru</span></a><span>. Figure 19 shows that Alexander received an email. Then I turn on my exim.</span></p><center>
+<p><img src="https://i.imgur.com/uWSQK4F.png" alt="" loading="lazy"><br>
+<span>Figure 19 - Alexander’s log file</span></p>
+</center><p><span>Here we can see that when my server was turned off, Alex started receiving emails, and when my exim was turned on again, he sent me the saved messages.</span><br>
+<span>Figure 20 shows that I received the saved messages.</span></p><center>
+<p><img src="https://i.imgur.com/ojUkRTH.png" alt="" loading="lazy"><br>
+<span>Figure 20 - Received saved messages</span></p>
+</center><hr><center>
+<h3 id="I-provide-backup" data-id="I-provide-backup"><a class="anchor hidden-xs" href="#I-provide-backup" title="I-provide-backup"><span class="octicon octicon-link"></span></a><span>I provide backup</span></h3>
+</center><hr><p><span>I have set up my server as a backup for Alexander (Figure 21).</span></p><center>
+<p><img src="https://i.imgur.com/5rAqjIV.png" alt="" loading="lazy"><br>
+<span>Figure 21 - Setting up my server as a backup</span></p>
+</center><p><span>Then, after he disabled Postfix I received an email (Figure 22).</span></p><center>
+<p><img src="https://i.imgur.com/34ij2H0.png" alt="" loading="lazy"><br>
+<span>Figure 22 - Email for Alex</span></p>
+</center><p><span>I received the email from </span><a href="mailto:typucm@gmail.com" target="_blank" rel="noopener"><span>typucm@gmail.com</span></a><span> and send it to </span><a href="mailto:postmaster@st8.sne21.ru" target="_blank" rel="noopener"><span>postmaster@st8.sne21.ru</span></a><span>. It bounced back, exim send it again. This is a mailing loop. After Alexander turn on the Postfix, this loop will end.</span></p><p><span>I can prevent this by forcibly adding relay emails for Alexander to the queue (queue_domains=</span><a href="http://st8.sne21.ru" target="_blank" rel="noopener"><span>st8.sne21.ru</span></a><span>) and setting up MAIN_IGNORE_BOUNCE_ERRORS_AFTER = 5m.</span></p><hr><h2 id="Task-4---Mailing-loops" data-id="Task-4---Mailing-loops"><a class="anchor hidden-xs" href="#Task-4---Mailing-loops" title="Task-4---Mailing-loops"><span class="octicon octicon-link"></span></a><span>Task 4 - Mailing loops</span></h2><div class="alert alert-success">
+<ol start="9">
+<li><span>Create an email loop with your partner from domain to domain using email aliases.</span></li>
+<li><span>Send an email to the loop using your own email address and see what happens on your MTA.</span></li>
+<li><span>Can you change the behaviour of your MTA in response to this loop?</span></li>
+</ol>
+</div><hr><p><span>I have already created a loop during a previous task. But when we tried to do this with aliases, creating links to each other, I was blocked by mailgun in the process (Figure 23).</span></p><center>
+<p><img src="https://i.imgur.com/TCVnRR5.png" alt="" loading="lazy"><br>
+<span>Figure 23 - I was blocked by mailgun</span></p>
+</center><p data-original-title="" title=""><span>So what should be the difference? Let’s take a look at the received email from the previous task (Figure 24).</span></p><center>
+<p><img src="https://i.imgur.com/DNnAckR.png" alt="" loading="lazy"><br>
+<span>Figure 24 - Received email from the previous task</span></p>
+</center><p data-original-title="" title=""><span>These messages are signed only by my DKIM, but in this task, they must be signed by a chain of signatures mine-mailgun-Alexander-mailgun-mine and etc.</span></p><p><span>To avoid message loops, I can add appropriate tags to allow the system to recognize the message and stop the loop running. This can also be done manually.</span></p><hr><h2 id="Task-5---Virtual-Domains" data-id="Task-5---Virtual-Domains"><a class="anchor hidden-xs" href="#Task-5---Virtual-Domains" title="Task-5---Virtual-Domains"><span class="octicon octicon-link"></span></a><span>Task 5 - Virtual Domains</span></h2><div class="alert alert-success">
+<ol start="12">
+<li><span>Create a new subdomain within your domain and add an MX entry to it.</span></li>
+<li><span>Then extend your MTA configuration to handle virtual domains, and have it handle the email for the newly created domain.</span></li>
+<li><span>Validate that you are now receiving emails for both domains.</span></li>
+</ol>
+</div><p><span>I created subdomain </span><a href="http://a.st12.sne21.ru" target="_blank" rel="noopener"><span>a.st12.sne21.ru</span></a><span> within my domain and added MX record </span><code>a       IN      MX      15 mail</code><span>.</span><br>
+<span>Then I set up a virtual domain in exim as shown below.</span></p><blockquote>
+<p><span>Routers configuration</span></p>
+</blockquote><pre><code>my_domain:
+  driver = accept
+  domains = dsearch;/etc/mail/domains
+  local_parts = lsearch;/etc/mail/domains/$domain
+  transport = my_mailboxes
+</code></pre><blockquote>
+<p><span>Transport configuration</span></p>
+</blockquote><pre><code>my_mailboxes:
+  driver = appendfile
+  file = /var/mail/$domain/$local_part
+  user = mail
+</code></pre><p><span>I added </span><code>webmaster: webmaster@a.st12.sne21.ru</code><span> to </span><code>/etc/mail/domains/a.st12.sne21.ru</code><span> file.</span></p><p><span>Then I send email for virtual domain (Figures 25, 26)</span></p><center>
+<p><img src="https://i.imgur.com/IISwcZn.png" alt="" loading="lazy"><br>
+<span>Figure 25 - Sended email</span></p>
+<p><img src="https://i.imgur.com/9CJJzJ6.png" alt="" loading="lazy"><br>
+<span>Figure 26 - Recieved email</span></p>
+</center><p><span>this message is encrypted by base64.</span></p><pre><code>ClZmY2Z2Ci0tCtChINGD0LLQsNC20LXQvdC40LXQvCwK0KjQtdC70LrQvtCy0L3QuNC60L7QsiDQ
+ki4g0J0uIA==
+</code></pre><p><span>Let’s decipher it</span></p><pre><code>Vfcfv
+--
+С уважением,
+Шелковников В. Н.
+</code></pre><p><span>So it’s the same message.</span></p><p><span>In my case, virtual domains are handled by the same host with mailboxes on this host, but mailbox owners do not necessarily have login accounts on this host.</span></p><hr><h2 id="Task-6---Transport-Encryption" data-id="Task-6---Transport-Encryption"><a class="anchor hidden-xs" href="#Task-6---Transport-Encryption" title="Task-6---Transport-Encryption"><span class="octicon octicon-link"></span></a><span>Task 6 - Transport Encryption</span></h2><div class="alert alert-success">
+<p><span>15.Questions</span><br>
+<span>a) Which one is better, SSL/TLS or STARTTLS, why?</span><br>
+<span>b) Which one is actually in use for SMTP?</span><br>
+<span>16.Task</span><br>
+<span>a) Add transport encryption to your MTA.</span><br>
+<span>b) Eventually force the transport to be encrypted only (refuse non encrypted transport).</span><br>
+<span>c) Proceed with validation (proof or acceptance testing), as usual.</span></p>
+</div><hr><center>
+<h2 id="Answers" data-id="Answers"><a class="anchor hidden-xs" href="#Answers" title="Answers"><span class="octicon octicon-link"></span></a><span>Answers</span></h2>
+</center><hr><blockquote>
+<p><span>Which one is better, SSL/TLS or STARTTLS, why?</span></p>
+<blockquote>
+<p><span>SSL/TLS  provide a way to encrypt a communication channel between  computer and server. TLS is the successor to SSL and the terms SSL and TLS are used interchangeably unless you’re referring to a specific version of the protocol.</span></p>
+</blockquote>
+<blockquote>
+<p><span>STARTTLS is a way to take an existing insecure connection, and upgrade it to a secure connection using SSL/TLS. If there is no SSL/TLS support, the information exchange will take place in plain text, which is very insecure.</span></p>
+</blockquote>
+<blockquote>
+<p><span>So SSL/TLS is better.</span></p>
+</blockquote>
+</blockquote><hr><blockquote>
+<p><span>Which one is actually in use for SMTP?</span></p>
+<blockquote>
+<p><span>Both of them is actually in use for SMTP, but today SMTP mostly uses SSL/TLS.</span></p>
+</blockquote>
+</blockquote><hr><center>
+<h2 id="Task" data-id="Task"><a class="anchor hidden-xs" href="#Task" title="Task"><span class="octicon octicon-link"></span></a><span>Task</span></h2>
+</center><hr><p><span>I build Exim with TLS support, and TLS is advertised by a server, so the SMTP transport always tries to start a TLS session.</span></p><pre><code>.ifndef MAIN_TLS_ADVERTISE_HOSTS
+MAIN_TLS_ADVERTISE_HOSTS = *
+.endif
+tls_advertise_hosts = MAIN_TLS_ADVERTISE_HOSTS
+</code></pre><p><span>Figure 27 shows the TLS options of Exim.</span></p><center>
+<p><img src="https://i.imgur.com/KnZZrTB.png" alt="" loading="lazy"><br>
+<span>Figure 27 - TLS options</span></p>
+</center><p><span>I’m using self signing certificate.</span></p><p><span>To verify that my connection is secured, I used </span><code>nc -v localhost 25 and openssl s_client-connect localhost:25 -starttls smtp</code><span> commands (Figure 28).</span></p><center>
+<p><img src="https://i.imgur.com/aJnysEa.png" alt="" loading="lazy"><br>
+<span>Figure 28 - certificate</span></p>
+</center><hr><h2 id="References" data-id="References"><a class="anchor hidden-xs" href="#References" title="References"><span class="octicon octicon-link"></span></a><span>References</span></h2><hr><ol>
+<li><a href="https://www.exim.org/" target="_blank" rel="noopener"><span>Exim Internet Mailer</span></a></li>
+<li><a href="https://vacadem.ru/blog/linux-unix-and-other/adding-a-certificate-to-exim4.html" target="_blank" rel="noopener"><span>Exim sertificate</span></a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-install-the-send-only-mail-server-exim-on-ubuntu-12-04" target="_blank" rel="noopener"><span>How To Install the Send-Only Mail Server “Exim”</span></a></li>
+<li><a href="https://www.mailgun.com/" target="_blank" rel="noopener"><span>Mailgun</span></a></li>
+<li><a href="https://help.mailgun.com/hc/en-us/articles/360026833053" target="_blank" rel="noopener"><span>Domain Verification Walkthrough</span></a></li>
+<li><a href="https://www.lissyara.su/articles/freebsd/mail/exim_relay/" target="_blank" rel="noopener"><span>Backup MX (exim)</span></a></li>
+<li><a href="https://www.exim.org/exim-html-current/doc/html/spec_html/ch-some_common_configuration_settings.html" target="_blank" rel="noopener"><span>Virtual domains</span></a></li>
+<li><a href="http://www.postfix.org/STANDARD_CONFIGURATION_README.html#backup" target="_blank" rel="noopener"><span>Configuring Postfix as primary or backup MX host for a remote site</span></a></li>
+<li><a href="https://help.runbox.com/connection-encryption-ssl-tls-starttls/" target="_blank" rel="noopener"><span>Connection Encryption – SSL, TLS and STARTTLS</span></a></li>
+</ol></div>
+    <div class="ui-toc dropup unselectable hidden-print" style="display:none;">
+        <div class="pull-right dropdown">
+            <a id="tocLabel" class="ui-toc-label btn btn-default" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" title="Table of content">
+                <i class="fa fa-bars"></i>
+            </a>
+            <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
+                <div class="toc"><ul class="nav">
+<li class=""><a href="#CIA-Lab-5---Mail-Transfer-Agents-MTA" title="CIA Lab 5 - Mail Transfer Agents (MTA)">CIA Lab 5 - Mail Transfer Agents (MTA)</a><ul class="nav">
+<li class=""><a href="#Task-1---DNS-Insecurity" title="Task 1 - DNS Insecurity">Task 1 - DNS Insecurity</a></li>
+<li><a href="#Implementation" title="Implementation">Implementation</a></li>
+<li><a href="#Task-2---Sending-mail---email-validation---SPF-amp-DKIM" title="Task 2 - Sending mail - email validation - SPF &amp; DKIM">Task 2 - Sending mail - email validation - SPF &amp; DKIM</a></li>
+<li><a href="#Task-3---Mail-backup" title="Task 3 - Mail backup">Task 3 - Mail backup</a></li>
+<li><a href="#Task-4---Mailing-loops" title="Task 4 - Mailing loops">Task 4 - Mailing loops</a></li>
+<li><a href="#Task-5---Virtual-Domains" title="Task 5 - Virtual Domains">Task 5 - Virtual Domains</a></li>
+<li><a href="#Task-6---Transport-Encryption" title="Task 6 - Transport Encryption">Task 6 - Transport Encryption</a></li>
+<li class=""><a href="#References" title="References">References</a></li>
+</ul>
+</li>
+</ul>
+</div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+            </ul>
+        </div>
+    </div>
+    <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;" null null>
+        <div class="toc"><ul class="nav">
+<li class=""><a href="#CIA-Lab-5---Mail-Transfer-Agents-MTA" title="CIA Lab 5 - Mail Transfer Agents (MTA)">CIA Lab 5 - Mail Transfer Agents (MTA)</a><ul class="nav">
+<li class=""><a href="#Task-1---DNS-Insecurity" title="Task 1 - DNS Insecurity">Task 1 - DNS Insecurity</a></li>
+<li><a href="#Implementation" title="Implementation">Implementation</a></li>
+<li><a href="#Task-2---Sending-mail---email-validation---SPF-amp-DKIM" title="Task 2 - Sending mail - email validation - SPF &amp; DKIM">Task 2 - Sending mail - email validation - SPF &amp; DKIM</a></li>
+<li><a href="#Task-3---Mail-backup" title="Task 3 - Mail backup">Task 3 - Mail backup</a></li>
+<li><a href="#Task-4---Mailing-loops" title="Task 4 - Mailing loops">Task 4 - Mailing loops</a></li>
+<li><a href="#Task-5---Virtual-Domains" title="Task 5 - Virtual Domains">Task 5 - Virtual Domains</a></li>
+<li><a href="#Task-6---Transport-Encryption" title="Task 6 - Transport Encryption">Task 6 - Transport Encryption</a></li>
+<li class=""><a href="#References" title="References">References</a></li>
+</ul>
+</li>
+</ul>
+</div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gist-embed/2.6.0/gist-embed.min.js" integrity="sha256-KyF2D6xPIJUW5sUDSs93vWyZm+1RzIpKCexxElmxl8g=" crossorigin="anonymous" defer></script>
+    <script>
+        var markdown = $(".markdown-body");
+        //smooth all hash trigger scrolling
+        function smoothHashScroll() {
+            var hashElements = $("a[href^='#']").toArray();
+            for (var i = 0; i < hashElements.length; i++) {
+                var element = hashElements[i];
+                var $element = $(element);
+                var hash = element.hash;
+                if (hash) {
+                    $element.on('click', function (e) {
+                        // store hash
+                        var hash = this.hash;
+                        if ($(hash).length <= 0) return;
+                        // prevent default anchor click behavior
+                        e.preventDefault();
+                        // animate
+                        $('body, html').stop(true, true).animate({
+                            scrollTop: $(hash).offset().top
+                        }, 100, "linear", function () {
+                            // when done, add hash to url
+                            // (default click behaviour)
+                            window.location.hash = hash;
+                        });
+                    });
+                }
+            }
+        }
+
+        smoothHashScroll();
+        var toc = $('.ui-toc');
+        var tocAffix = $('.ui-affix-toc');
+        var tocDropdown = $('.ui-toc-dropdown');
+        //toc
+        tocDropdown.click(function (e) {
+            e.stopPropagation();
+        });
+
+        var enoughForAffixToc = true;
+
+        function generateScrollspy() {
+            $(document.body).scrollspy({
+                target: ''
+            });
+            $(document.body).scrollspy('refresh');
+            if (enoughForAffixToc) {
+                toc.hide();
+                tocAffix.show();
+            } else {
+                tocAffix.hide();
+                toc.show();
+            }
+            $(document.body).scroll();
+        }
+
+        function windowResize() {
+            //toc right
+            var paddingRight = parseFloat(markdown.css('padding-right'));
+            var right = ($(window).width() - (markdown.offset().left + markdown.outerWidth() - paddingRight));
+            toc.css('right', right + 'px');
+            //affix toc left
+            var newbool;
+            var rightMargin = (markdown.parent().outerWidth() - markdown.outerWidth()) / 2;
+            //for ipad or wider device
+            if (rightMargin >= 133) {
+                newbool = true;
+                var affixLeftMargin = (tocAffix.outerWidth() - tocAffix.width()) / 2;
+                var left = markdown.offset().left + markdown.outerWidth() - affixLeftMargin;
+                tocAffix.css('left', left + 'px');
+            } else {
+                newbool = false;
+            }
+            if (newbool != enoughForAffixToc) {
+                enoughForAffixToc = newbool;
+                generateScrollspy();
+            }
+        }
+        $(window).resize(function () {
+            windowResize();
+        });
+        $(document).ready(function () {
+            windowResize();
+            generateScrollspy();
+        });
+
+        //remove hash
+        function removeHash() {
+            window.location.hash = '';
+        }
+
+        var backtotop = $('.back-to-top');
+        var gotobottom = $('.go-to-bottom');
+
+        backtotop.click(function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (scrollToTop)
+                scrollToTop();
+            removeHash();
+        });
+        gotobottom.click(function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (scrollToBottom)
+                scrollToBottom();
+            removeHash();
+        });
+
+        var toggle = $('.expand-toggle');
+        var tocExpand = false;
+
+        checkExpandToggle();
+        toggle.click(function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            tocExpand = !tocExpand;
+            checkExpandToggle();
+        })
+
+        function checkExpandToggle () {
+            var toc = $('.ui-toc-dropdown .toc');
+            var toggle = $('.expand-toggle');
+            if (!tocExpand) {
+                toc.removeClass('expand');
+                toggle.text('Expand all');
+            } else {
+                toc.addClass('expand');
+                toggle.text('Collapse all');
+            }
+        }
+
+        function scrollToTop() {
+            $('body, html').stop(true, true).animate({
+                scrollTop: 0
+            }, 100, "linear");
+        }
+
+        function scrollToBottom() {
+            $('body, html').stop(true, true).animate({
+                scrollTop: $(document.body)[0].scrollHeight
+            }, 100, "linear");
+        }
+    </script>
+</body>
+
+</html>
